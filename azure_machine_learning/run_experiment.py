@@ -1,16 +1,18 @@
 """
 Hello on Azure machine learning.
 """
-
+import os
 from azureml.core import Workspace, Experiment, ScriptRunConfig
 import azureml
+from azureml.core.authentication import InteractiveLoginAuthentication
 
 
 def main():
     """
     Hello on Azure machine learning.
     """
-    work_space = Workspace.from_config()
+    interactive_auth = InteractiveLoginAuthentication(tenant_id=os.getenv("TENANT_ID"))
+    work_space = Workspace.from_config(auth=interactive_auth)
 
     experiment = Experiment(workspace=work_space, name="hello-experiment")
 
