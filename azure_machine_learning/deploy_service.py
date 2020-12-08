@@ -1,6 +1,7 @@
 """
 Deploy model to your service
 """
+import os
 import numpy as np
 from azureml.core import Environment, Model, Workspace
 from azureml.core.conda_dependencies import CondaDependencies
@@ -12,7 +13,8 @@ def main():
     """
     Deploy model to your service
     """
-    work_space = Workspace.from_config()
+    interactive_auth = InteractiveLoginAuthentication(tenant_id=os.getenv("TENANT_ID"))
+    work_space = Workspace.from_config(auth=interactive_auth)
     environment = Environment("keras-service-environment")
     environment.python.conda_dependencies = CondaDependencies.create(
         python_version="3.7.7",

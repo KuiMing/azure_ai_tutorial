@@ -1,21 +1,26 @@
 """
 Create workspace
 """
+import os
 import json
 from azureml.core import Workspace
+
+from azureml.core.authentication import InteractiveLoginAuthentication
 
 
 def main():
     """
     Create workspace
     """
-    config = json.load(open("config/azureml.json", "r"))
+    interactive_auth = InteractiveLoginAuthentication(tenant_id=os.getenv("TENANT_ID"))
+
     work_space = Workspace.create(
         name="mltibame",  # provide a name for your workspace
-        subscription_id=config["subscription_id"],  # provide your subscription ID
-        resource_group="Tibame",  # provide a resource group name
+        subscription_id=os.getenv("SUBSCRIPTION_ID"),  # provide your subscription ID
+        resource_group="tibame",  # provide a resource group name
         create_resource_group=True,
         location="eastus2",  # For example: 'westeurope', 'eastus2', 'westus2' or 'southeastasia'.
+        auth=interactive_auth,
     )
 
     # write out the workspace details to a configuration file: .azureml/config.json

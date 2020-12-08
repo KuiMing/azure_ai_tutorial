@@ -1,9 +1,11 @@
 """
 Create a compute resource
 """
+import os
 from azureml.core import Workspace
 from azureml.core.compute import ComputeTarget, AmlCompute
 from azureml.core.compute_target import ComputeTargetException
+from azureml.core.authentication import InteractiveLoginAuthentication
 
 
 def main():
@@ -11,7 +13,8 @@ def main():
     Create a compute resource
     """
     # This automatically looks for a directory .azureml
-    work_space = Workspace.from_config()
+    interactive_auth = InteractiveLoginAuthentication(tenant_id=os.getenv("TENANT_ID"))
+    work_space = Workspace.from_config(auth=interactive_auth)
 
     # Choose a name for your CPU cluster
     cpu_cluster_name = "cpu-cluster"

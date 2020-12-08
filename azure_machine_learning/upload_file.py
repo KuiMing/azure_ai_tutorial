@@ -1,8 +1,10 @@
 """
 Upload data to Azure machine learning
 """
+import os
 import argparse
 from azureml.core import Workspace, Dataset
+from azureml.core.authentication import InteractiveLoginAuthentication
 
 
 def parse_args():
@@ -24,7 +26,8 @@ def main():
     Upload data to Azure machine learning
     """
     args = parse_args()
-    work_space = Workspace.from_config()
+    interactive_auth = InteractiveLoginAuthentication(tenant_id=os.getenv("TENANT_ID"))
+    work_space = Workspace.from_config(auth=interactive_auth)
     datastore = work_space.get_default_datastore()
     datastore.upload(src_dir=args.folder, target_path=args.target_path, overwrite=True)
     dataset = Dataset.File.from_files(path=(datastore, args.target_path))
