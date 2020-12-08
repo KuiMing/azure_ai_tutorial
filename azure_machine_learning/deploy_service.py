@@ -7,6 +7,7 @@ from azureml.core import Environment, Model, Workspace
 from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AciWebservice
+from azureml.core.authentication import InteractiveLoginAuthentication
 
 
 def main():
