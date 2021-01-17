@@ -6,13 +6,16 @@ from azureml.core import Environment, Model, Workspace
 from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AciWebservice
-
+from azureml.core.authentication import InteractiveLoginAuthentication
 
 def main():
     """
     Deploy model to your service
     """
-    work_space = Workspace.from_config()
+    interactive_auth = InteractiveLoginAuthentication(
+        tenant_id="9ae3a071-d4ec-4cca-bcbd-2f8d2fa92981"
+    )
+    work_space = Workspace.from_config(auth=interactive_auth)
     environment = Environment("keras-service-environment")
     environment.python.conda_dependencies = CondaDependencies.create(
         python_version="3.7.7",
