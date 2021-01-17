@@ -5,13 +5,18 @@ import azureml
 from azureml.core import ScriptRunConfig, Dataset, Workspace, Experiment, Environment
 from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.model import Model
-
+from azureml.core.authentication import InteractiveLoginAuthentication
+from azureml.tensorboard import Tensorboard
 
 def main():
     """
     Run the experiment for training
     """
-    work_space = Workspace.from_config()
+    interactive_auth = InteractiveLoginAuthentication(
+        tenant_id="9ae3a071-d4ec-4cca-bcbd-2f8d2fa92981"
+    )
+    work_space = Workspace.from_config(auth=interactive_auth)
+    # work_space = Workspace.from_config()
 
     # Set up the dataset for training
     datastore = work_space.get_default_datastore()
@@ -19,20 +24,26 @@ def main():
 
     # Set up the experiment for training
     experiment = Experiment(workspace=work_space, name="keras-lenet-train")
-    azureml._restclient.snapshots_client.SNAPSHOT_MAX_SIZE_BYTES = 2000000000
+    # azureml._restclient.snapshots_client.SNAPSHOT_MAX_SIZE_BYTES = 2000000000
     config = ScriptRunConfig(
         source_directory=".",
         script="train_keras.py",
         compute_target="cpu-cluster",
         arguments=[
-            "--data_path",
+            "--data_folder",
             dataset.as_named_input("input").as_mount(),
         ],
     )
 
     # Set up the Tensoflow/Keras environment
     environment = Environment("keras-environment")
+
+    # environment = Environment.from_conda_specification(
+    #     name='keras-environment',
+    #     file_path='keras-environment.yml'
+    # )
     environment.python.conda_dependencies = CondaDependencies.create(
+        python_version="3.7.7",
         pip_packages=["azureml-defaults", "numpy", "tensorflow==2.3.1"]
     )
     config.run_config.environment = environment
@@ -45,7 +56,15 @@ def main():
     )
     print("")
     print(aml_url)
+
+    tboard = Tensorboard([run])
+    # If successful, start() returns a string with the URI of the instance.
+    tboard.start(start_browser=True)
     run.wait_for_completion(show_output=True)
+    # After your job completes, be sure to stop() the streaming otherwise it will continue to run.
+    print("Press enter to stop")
+    input()
+    tboard.stop()
 
     # Register Model
     metrics = run.get_metrics()
