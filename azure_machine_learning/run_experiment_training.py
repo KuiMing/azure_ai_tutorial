@@ -1,22 +1,18 @@
 """
 Run the experiment for training
 """
-import azureml
+# import azureml
 from azureml.core import ScriptRunConfig, Dataset, Workspace, Experiment, Environment
 from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.model import Model
-from azureml.core.authentication import InteractiveLoginAuthentication
 from azureml.tensorboard import Tensorboard
+
 
 def main():
     """
     Run the experiment for training
     """
-    interactive_auth = InteractiveLoginAuthentication(
-        tenant_id="9ae3a071-d4ec-4cca-bcbd-2f8d2fa92981"
-    )
-    work_space = Workspace.from_config(auth=interactive_auth)
-    # work_space = Workspace.from_config()
+    work_space = Workspace.from_config()
 
     # Set up the dataset for training
     datastore = work_space.get_default_datastore()
@@ -24,7 +20,7 @@ def main():
 
     # Set up the experiment for training
     experiment = Experiment(workspace=work_space, name="keras-lenet-train")
-    # azureml._restclient.snapshots_client.SNAPSHOT_MAX_SIZE_BYTES = 2000000000
+#     azureml._restclient.snapshots_client.SNAPSHOT_MAX_SIZE_BYTES = 2000000000
     config = ScriptRunConfig(
         source_directory=".",
         script="train_keras.py",
@@ -55,8 +51,8 @@ def main():
         "Submitted to an Azure Machine Learning compute cluster. Click on the link below"
     )
     print("")
-    print(aml_url)
-
+    print(aml_url)    
+    
     tboard = Tensorboard([run])
     # If successful, start() returns a string with the URI of the instance.
     tboard.start(start_browser=True)

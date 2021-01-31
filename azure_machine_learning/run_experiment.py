@@ -3,19 +3,14 @@ Hello on Azure machine learning.
 """
 
 from azureml.core import Workspace, Experiment, ScriptRunConfig
-import azureml
-from azureml.core.authentication import InteractiveLoginAuthentication
+# import azureml
 
 
 def main():
     """
     Hello on Azure machine learning.
     """
-    interactive_auth = InteractiveLoginAuthentication(
-        tenant_id="9ae3a071-d4ec-4cca-bcbd-2f8d2fa92981"
-    )
-    work_space = Workspace.from_config(auth=interactive_auth)
-    # work_space = Workspace.from_config()
+    work_space = Workspace.from_config()
     experiment = Experiment(workspace=work_space, name="hello-experiment")
 
     config = ScriptRunConfig(
