@@ -79,7 +79,7 @@ def main():
 
     print("Adding images...")
     image_folder = config["image_folder"]
-    annotations = json.load(open("annotation.json", "r"))
+    annotations = json.load(open(config["annotation_file"], "r"))
     tagged_images_with_regions = []
     for label in annotations.keys():
         tagged_images_with_regions += add_image(
