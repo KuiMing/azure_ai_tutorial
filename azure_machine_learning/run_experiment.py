@@ -3,8 +3,9 @@ Hello on Azure machine learning.
 """
 import os
 from azureml.core import Workspace, Experiment, ScriptRunConfig
-import azureml
 from azureml.core.authentication import InteractiveLoginAuthentication
+
+# import azureml
 
 
 def main():
@@ -19,7 +20,7 @@ def main():
     config = ScriptRunConfig(
         source_directory=".", script="hello.py", compute_target="cpu-cluster"
     )
-    azureml._restclient.snapshots_client.SNAPSHOT_MAX_SIZE_BYTES = 2000000000
+    # azureml._restclient.snapshots_client.SNAPSHOT_MAX_SIZE_BYTES = 2000000000
 
     run = experiment.submit(config)
     aml_url = run.get_portal_url()

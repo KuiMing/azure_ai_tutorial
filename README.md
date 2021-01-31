@@ -1,5 +1,7 @@
 # Computer Vision Line Chat Bot
 
+Date: 2021/01/17
+
 ## On Azure
 
 ### Resource
