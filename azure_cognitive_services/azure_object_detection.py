@@ -1,10 +1,9 @@
 """
 Azure object detection
 """
-
+import os
 from io import BytesIO
 import requests
-import os
 from PIL import Image, ImageDraw, ImageFont
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from msrest.authentication import CognitiveServicesCredentials
